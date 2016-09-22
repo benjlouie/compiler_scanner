@@ -1,8 +1,8 @@
 
 ASSN = 2
-CLASS= ?
-CLASSDIR= ?
-LIB= ?
+CLASS= cs143
+CLASSDIR= /cool_student
+LIB= -L/usr/pubsw/lib -lfl -R/usr/pubsw/lib
 
 SRC= cool.flex test.cl README 
 CSRC= lextest.cc utilities.cc stringtab.cc handle_flags.cc
