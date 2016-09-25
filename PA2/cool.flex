@@ -16,6 +16,9 @@
 #define yylval cool_yylval
 #define yylex  cool_yylex
 
+/* Our own split character */
+#define SPLIT ,0x2
+
 /* Max size of string constants */
 #define MAX_STR_CONST 1025
 #define YY_NO_UNPUT   /* keep g++ happy */
@@ -50,6 +53,50 @@ extern YYSTYPE cool_yylval;
  */
 
 DARROW          =>
+STRING          "[!|#-~|\\"| |\t]*"
+ID              [a-z][a-zA-Z0-9_]*
+INTEGER         [0-9]+
+TYPE            [A-Z][a-zA-Z0-9_]*
+PLUS            +
+MINUS           -
+MUL             \*
+DIV             /
+LT              <[^-]?
+LTE             <=
+EQ              =
+AT              @
+DOT             .
+TILDE           ~
+LEFTBRACE       {
+RIGHTBRACE      }
+LEFTPAREN       (
+RIGHTPAREN      )
+SEMICOLON       ;
+COLON           :
+COMMA           ,
+WHITESPACE      [ \t\f\r\v]
+NEWLINE         [\n]
+IF              [iI][fF]
+FI              [fF][iI]
+ELSE            [Ee][Ll][Ss][Ee]
+THEN            [Tt][Hh][Ee][Nn]
+IN              [Ii][Nn]
+INHERITS        [Ii][Nn][Hh][Ee][Rr][Ii][Tt][Ss]
+ISVOID          [Ii][Ss][Vv][Oo][Ii][Dd]
+LET             [Ll][Ee][Tt]
+LOOP            [Ll][Oo][Oo][Pp]
+POOL            [Pp][Oo][Oo][Ll]
+WHILE           [Ww][Hh][Ii][Ll][Ee]
+CASE            [Cc][Aa][Ss][Ee]
+ESAC            [Ee][Ss][Aa][Cc]
+NEW             [Nn][Ee][Ww]
+OF              [Oo][Ff]
+NOT             [Nn][Oo][Tt]
+CLASS           [Cc][Ll][Aa][Ss][Ss]
+TRUE            true
+FALSE           false
+
+
 
 %%
 
@@ -61,7 +108,13 @@ DARROW          =>
  /*
   *  The multiple-character operators.
   */
-{DARROW}		{ return (DARROW); }
+{DARROW}		{ 
+            fprintf(stdout,yytext);
+            return (DARROW); 
+            }
+
+
+
 
  /*
   * Keywords are case-insensitive except for the values true and false,
