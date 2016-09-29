@@ -56,7 +56,7 @@ extern YYSTYPE cool_yylval;
 
 DARROW          =>
 ASSIGN		<-
-STRING          "\""([!|#-\377| |\t]|\\\")*"\""
+STRING          "\""([!|#-\377| |\t]|\\\n|\\\")*["\""|\n]
 ID              [a-z][a-zA-Z0-9_]*
 INTEGER         [0-9]+
 TYPE            [A-Z][a-zA-Z0-9_]*
@@ -141,7 +141,7 @@ MULTICOMMENT	"(*"([^*]|(\*+[^*)]))*\*+\)
 {STRING}	{
 			int len = strlen(yytext);
 			int newlineCount = 0;
-			vector<int> newlinePositions; //2 places at a time, (start,end) of escaped newline
+			std::vector<int> newlinePositions; //2 places at a time, (start,end) of escaped newline
 			newlinePositions.push_back(0); //offset so start/end is the usable sections
 			bool escapeError = false;
 			
@@ -155,12 +155,12 @@ MULTICOMMENT	"(*"([^*]|(\*+[^*)]))*\*+\)
 						while(isspace(yytext[i - j])) {
 							j--;
 						}
-						if(yytext[i - j] != '\') {
+						if(yytext[i - j] != '\\') {
 							fprintf(stdout,"#%d ERROR \"Unterminated string constant\"\n",yylineno);
 							escapeError = true;
 						} else {
 							newlinePositions.push_back(i - j); //start of escape
-							newlinePositions.push_back(i + 1); //end of escape
+							newlinePositions.push_back(i); //end of escape
 						}
 					}
 				}
@@ -170,9 +170,12 @@ MULTICOMMENT	"(*"([^*]|(\*+[^*)]))*\*+\)
 					int vectLen = newlinePositions.size();
 					for(int j = 0; j < vectLen; j+= 2) {
 						int start = newlinePositions[j];
-						int end = newlinePisitions[j+1];
+						int end = newlinePositions[j+1];
 						for(int i = start; i <  end; i++) {
-							if(yytext[i] < 32 || yytext[i] > 126) {
+							if(yytext[i] == '\n') {
+								fprintf(stdout,"\\n");
+							}
+							else if(yytext[i] < 32 || yytext[i] > 126) {
 								fprintf(stdout,"\\%o",yytext[i] & 0xFF);
 							}
 							else {
@@ -207,11 +210,4 @@ MULTICOMMENT	"(*"([^*]|(\*+[^*)]))*\*+\)
 {AT}		fprintf(stdout,"#%d '@'\n",yylineno);
 {TILDE}		fprintf(stdout,"#%d '~'\n",yylineno); 
 
-
-	
-
-
-
-
 %%
-
