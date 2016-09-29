@@ -11,6 +11,8 @@
 #include <cool-parse.h>
 #include <stringtab.h>
 #include <utilities.h>
+#include <ctype.h>
+#include <vector>
 
 /* The compiler assumes these identifiers. */
 #define yylval cool_yylval
@@ -138,19 +140,49 @@ MULTICOMMENT	"(*"([^*]|(\*+[^*)]))*\*+\)
 {ISVOID}	fprintf(stdout,"#%d ISVOID\n",yylineno);
 {STRING}	{
 			int len = strlen(yytext);
+			int newlineCount = 0;
+			vector<int> newlinePositions; //2 places at a time, (start,end) of escaped newline
+			newlinePositions.push_back(0); //offset so start/end is the usable sections
+			bool escapeError = false;
+			
 			if(len > 1026) {
 				fprintf(stdout,"#%d ERROR \"String constant too long\"\n",yylineno);
 			} else {
-				fprintf(stdout,"#%d STR_CONST ",yylineno);
-				for(int i = 0; i <  len; i++) {
-					if(yytext[i] < 32 || yytext[i] > 126) {
-						fprintf(stdout,"\\%o",yytext[i] & 0xFF);
-					}
-					else {
-						fprintf(stdout,"%c",yytext[i]);
+				for(int i = 0; i < len; i++) {
+					if(yytext[i] == '\n') {
+						newlineCount++;
+						int j = 1;
+						while(isspace(yytext[i - j])) {
+							j--;
+						}
+						if(yytext[i - j] != '\') {
+							fprintf(stdout,"#%d ERROR \"Unterminated string constant\"\n",yylineno);
+							escapeError = true;
+						} else {
+							newlinePositions.push_back(i - j); //start of escape
+							newlinePositions.push_back(i + 1); //end of escape
+						}
 					}
 				}
-				fprintf(stdout,"\n");
+				newlinePositions.push_back(len);
+				if(!escapeError) {
+					fprintf(stdout,"#%d STR_CONST ",yylineno);
+					int vectLen = newlinePositions.size();
+					for(int j = 0; j < vectLen; j+= 2) {
+						int start = newlinePositions[j];
+						int end = newlinePisitions[j+1];
+						for(int i = start; i <  end; i++) {
+							if(yytext[i] < 32 || yytext[i] > 126) {
+								fprintf(stdout,"\\%o",yytext[i] & 0xFF);
+							}
+							else {
+								fprintf(stdout,"%c",yytext[i]);
+							}
+						}
+					}
+					fprintf(stdout, "\n");
+				}
+				yylineno += newlineCount;
 			}
 		}
 {INTEGER}	fprintf(stdout,"#%d INT_CONST %s\n",yylineno,yytext);
