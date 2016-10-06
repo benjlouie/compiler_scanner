@@ -57,7 +57,7 @@ class Main {
   c : Razz <- new Razz;
   d : Bar <- new Bar;
 
-  main(): String { "do nothin
+  main(): String { "do nothin \
   g" };
 
 };
