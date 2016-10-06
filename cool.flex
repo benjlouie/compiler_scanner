@@ -11,6 +11,8 @@
 #include <cool-parse.h>
 #include <stringtab.h>
 #include <utilities.h>
+#include <ctype.h>
+#include <vector>
 
 /* The compiler assumes these identifiers. */
 #define yylval cool_yylval
@@ -53,8 +55,8 @@ extern YYSTYPE cool_yylval;
  */
 
 DARROW          =>
-ASSIGN		<-
-STRING          "\""([!|#-\377| |\t]|\\\")*"\""
+ASSIGN			<-
+STRING          "\""([!|#-\377| |\t|\x00]|\\\n|\\\")*["\""|\n]
 ID              [a-z][a-zA-Z0-9_]*
 INTEGER         [0-9]+
 TYPE            [A-Z][a-zA-Z0-9_]*
@@ -62,7 +64,7 @@ PLUS            [+]
 MINUS           [-]
 MUL             \*
 DIV             [/]
-LT              <[^-]?
+LT              <
 LTE             <=
 EQ              [=]
 AT              [@]
@@ -98,6 +100,7 @@ TRUE            true
 FALSE           false
 INLINECOMMENT	--[^\n]*[\n]
 MULTICOMMENT	"(*"([^*]|(\*+[^*)]))*\*+\)
+MISC			[\1-\11|\16-\37|\200-\377|\[|\]|\&|\%|\$|\#|\!|\>|\`]
 
 
 
@@ -137,20 +140,66 @@ MULTICOMMENT	"(*"([^*]|(\*+[^*)]))*\*+\)
 {NEW}		fprintf(stdout,"#%d NEW\n",yylineno);
 {ISVOID}	fprintf(stdout,"#%d ISVOID\n",yylineno);
 {STRING}	{
-			int len = strlen(yytext);
+			int len = yyleng;
+			int newlineCount = 0;
+			std::vector<int> newlinePositions; //2 places at a time, (start,end) of escaped newline
+			newlinePositions.push_back(0); //offset so start/end is the usable sections
+			bool escapeError = false;
+			
 			if(len > 1026) {
 				fprintf(stdout,"#%d ERROR \"String constant too long\"\n",yylineno);
 			} else {
-				fprintf(stdout,"#%d STR_CONST ",yylineno);
-				for(int i = 0; i <  len; i++) {
-					if(yytext[i] < 32 || yytext[i] > 126) {
-						fprintf(stdout,"\\%o",yytext[i] & 0xFF);
-					}
-					else {
-						fprintf(stdout,"%c",yytext[i]);
+				for(int i = 0; i < len; i++) {
+					if(yytext[i] == '\n') {
+						newlineCount++;
+						int j = 1;
+						while(isspace(yytext[i - j])) {
+							j--;
+						}
+						if(yytext[i - j] != '\\') {
+							fprintf(stdout,"#%d ERROR \"Unterminated string constant\"\n",yylineno);
+							escapeError = true;
+						} else {
+							newlinePositions.push_back(i - j); //start of escape
+							newlinePositions.push_back(i); //end of escape
+						}
+					} else if(yytext[i] == '\0') {
+						fprintf(stdout,"#%d ERROR \"String contains null character.\"\n",yylineno);
+						escapeError = true;
 					}
 				}
-				fprintf(stdout,"\n");
+				newlinePositions.push_back(len);
+				if(!escapeError) {
+					fprintf(stdout,"#%d STR_CONST ",yylineno);
+					int vectLen = newlinePositions.size();
+					for(int j = 0; j < vectLen; j+= 2) {
+						int start = newlinePositions[j];
+						int end = newlinePositions[j+1];
+						for(int i = start; i <  end; i++) {
+							if(yytext[i] == '\n') {
+								fprintf(stdout,"\\n");
+							}
+							else if(yytext[i] < 32 || yytext[i] > 126) {
+								fprintf(stdout,"\\%o",yytext[i] & 0xFF);
+							}
+							else if(yytext[i] == '\\' && (i+1) < len
+								&& yytext[i + 1] != '\n'
+								&& yytext[i + 1] != 'b'
+								&& yytext[i + 1] != 't'
+								&& yytext[i + 1] != 'n'
+								&& yytext[i + 1] != 'f'
+								&& yytext[i + 1] != '"') {
+								fprintf(stdout,"%c",yytext[i + 1]);
+								i++;
+							}
+							else {
+								fprintf(stdout,"%c",yytext[i]);
+							}
+						}
+					}
+					fprintf(stdout, "\n");
+				}
+				yylineno += newlineCount;
 			}
 		}
 {INTEGER}	fprintf(stdout,"#%d INT_CONST %s\n",yylineno,yytext);
@@ -174,12 +223,12 @@ MULTICOMMENT	"(*"([^*]|(\*+[^*)]))*\*+\)
 {EQ}            fprintf(stdout,"#%d '='\n",yylineno); 
 {AT}		fprintf(stdout,"#%d '@'\n",yylineno);
 {TILDE}		fprintf(stdout,"#%d '~'\n",yylineno); 
-
-
-	
-
-
-
-
+{MISC}		{
+				if(yytext[0] < 32 || yytext[0] > 126) {
+					fprintf(stdout,"#%d ERROR \"\\%o\"\n",yylineno,yytext[0] & 0xFF);
+				}
+				else {
+					fprintf(stdout,"#%d ERROR \"%s\"\n",yylineno,yytext);
+				}
+			}
 %%
-
