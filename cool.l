@@ -15,7 +15,6 @@
 #include "ast.h"
 #include "cool.tab.h"
 #endif
-
 #include <ctype.h>
 #include <vector>
 
@@ -34,7 +33,11 @@
 
 #define print(s)    fprintf(yyout, "%d %s\n", yylineno, (s));
 #define print_long(s, s2) fprintf(yyout, "%d %s %s\n", yylineno, (s), (s2));
-        
+
+#ifndef __linux__
+    #define snprintf _snprintf
+#endif
+
 char string_buf[MAX_STR_CONST]; /* to assemble string constants */
 char *string_buf_ptr;
 
@@ -109,8 +112,8 @@ MISC			[\1-\11|\16-\37|\200-\377|\[|\]|\&|\%|\$|\#|\!|\>|\`]
 
 %%
 
-{NEWLINE}	{yylineno++; return 1;}
-{INLINECOMMENT}	{yylineno++; return 1;}
+{NEWLINE}	{yylineno++; /*return 1;*/}
+{INLINECOMMENT}	{yylineno++; /*return 1;*/}
 {MULTICOMMENT}	{
 			int i = 0;
 			int len = strlen(yytext);
@@ -120,9 +123,9 @@ MISC			[\1-\11|\16-\37|\200-\377|\[|\]|\&|\%|\$|\#|\!|\>|\`]
 				}
 				i++;
 			}
-			return 1;
+			//return 1;
 		}
-{WHITESPACE} {return 1;}
+{WHITESPACE} {}
 {RARROW}	{print("RARROW"); return RARROW;}
 {LARROW}	{print("LARROW"); return LARROW;}
 {ELSE}		{print("ELSE"); return ELSE;}
@@ -139,7 +142,12 @@ MISC			[\1-\11|\16-\37|\200-\377|\[|\]|\&|\%|\$|\#|\!|\>|\`]
 {ESAC}		{print("ESAC"); return ESAC;}
 {NOT}		{print("NOT"); return NOT;}
 {CLASS}		{print("CLASS"); return CLASS;}
-{TYPE}		{print_long("TYPEID",yytext); return TYPE;}
+{TYPE}		{
+			print_long("TYPEID",yytext);
+			yylval.Name = (char *)malloc((strlen(yytext) + 1) * sizeof(char));
+			strcpy(yylval.Name, yytext);
+			return TYPE;
+			}
 {INHERITS}	{print("INHERITS"); return INHERITS;}
 {NEW}		{print("NEW"); return NEW;}
 {ISVOID}	{print("ISVOID"); return ISVOID;}
@@ -186,7 +194,7 @@ MISC			[\1-\11|\16-\37|\200-\377|\[|\]|\&|\%|\$|\#|\!|\>|\`]
 							}
 							else if(yytext[i] < 32 || yytext[i] > 126) {
                                 char buf[100];
-								_snprintf(buf,5, "\\%o",yytext[i] & 0xFF);
+								snprintf(buf,5, "\\%o",yytext[i] & 0xFF);
                                 resultString += buf;
 							}
 							else if(yytext[i] == '\\' && (i+1) < len
@@ -211,10 +219,19 @@ MISC			[\1-\11|\16-\37|\200-\377|\[|\]|\&|\%|\$|\#|\!|\>|\`]
 			}
              return STRING;
 		}
-{INTEGERLITERAL}	{print_long("INT_CONST",yytext); return INTEGERLITERAL;} //TODO: account for ints > INT_MAX
+{INTEGERLITERAL}	{
+					print_long("INT_CONST",yytext);
+					yylval.Value = stoi(yytext); //TODO: account for ints > INT_MAX (use strtol())
+					return INTEGERLITERAL;
+					}
 {FALSE}		{print_long("BOOL_CONST",yytext); return FALSE;}
 {TRUE}		{print_long("BOOL_CONST",yytext); return TRUE;}
-{IDENTIFIER}		{print_long("IDENTIFIER",yytext); return IDENTIFIER;}
+{IDENTIFIER}	{
+				print_long("IDENTIFIER",yytext);
+				yylval.Name = (char *)malloc((strlen(yytext) + 1) * sizeof(char));
+				strcpy(yylval.Name, yytext);
+				return IDENTIFIER;
+				}
 {COMMA}		{print("','"); return COMMA;}
 {DOT}		{print("'.'"); return DOT;}
 {LBRACE}	{print("'{'"); return LBRACE;}
@@ -236,7 +253,7 @@ MISC			[\1-\11|\16-\37|\200-\377|\[|\]|\&|\%|\$|\#|\!|\>|\`]
 				if(yytext[0] < 32 || yytext[0] > 126) {
                 
                     char buf[100];
-                    _snprintf(buf,7, "\"\\%o\"",yytext[0] & 0xFF);
+                    snprintf(buf,7, "\"\\%o\"",yytext[0] & 0xFF);
 					print_long("ERROR", buf);
 				}
 				else {
@@ -245,7 +262,7 @@ MISC			[\1-\11|\16-\37|\200-\377|\[|\]|\&|\%|\$|\#|\!|\>|\`]
                     thing += "\"";
 					print_long("ERROR",thing.c_str());
 				}
-                return 1; //misc errnum
+                //return 1; //misc errnum
 			}
 <<EOF>> {return 0;} //tell driver.cpp we're done
 %%
