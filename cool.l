@@ -112,19 +112,9 @@ MISC			[\1-\11|\16-\37|\200-\377|\[|\]|\&|\%|\$|\#|\!|\>|\`]
 
 %%
 
-{NEWLINE}	{yylineno++; /*return 1;*/}
-{INLINECOMMENT}	{yylineno++; /*return 1;*/}
-{MULTICOMMENT}	{
-			int i = 0;
-			int len = strlen(yytext);
-			while(i < len) {
-				if(yytext[i] == '\n'){
-					yylineno++;
-				}
-				i++;
-			}
-			//return 1;
-		}
+{NEWLINE}	{}
+{INLINECOMMENT}	{}
+{MULTICOMMENT}	{}
 {WHITESPACE} {}
 {RARROW}	{print("RARROW"); return RARROW;}
 {LARROW}	{print("LARROW"); return LARROW;}
@@ -153,7 +143,6 @@ MISC			[\1-\11|\16-\37|\200-\377|\[|\]|\&|\%|\$|\#|\!|\>|\`]
 {ISVOID}	{print("ISVOID"); return ISVOID;}
 {STRING}	{
 			int len = yyleng;
-			int newlineCount = 0;
 			std::vector<int> newlinePositions; //2 places at a time, (start,end) of escaped newline
 			newlinePositions.push_back(0); //offset so start/end is the usable sections
 			bool escapeError = false;
@@ -163,7 +152,6 @@ MISC			[\1-\11|\16-\37|\200-\377|\[|\]|\&|\%|\$|\#|\!|\>|\`]
 			} else {
 				for(int i = 0; i < len; i++) {
 					if(yytext[i] == '\n') {
-						newlineCount++;
 						int j = 1;
 						while(isspace(yytext[i - j])) {
 							j--;
@@ -215,7 +203,6 @@ MISC			[\1-\11|\16-\37|\200-\377|\[|\]|\&|\%|\$|\#|\!|\>|\`]
 					resultString += "\n";
                     print(resultString.c_str());
 				}
-				yylineno += newlineCount;
 			}
              return STRING;
 		}
