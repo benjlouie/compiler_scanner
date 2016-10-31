@@ -18,9 +18,6 @@
 #define yylval cool_yylval
 #define yylex  cool_yylex
 
-/* Our own split character */
-#define SPLIT ",0xFE"
-
 /* Max size of string constants */
 #define MAX_STR_CONST 1025
 #define YY_NO_UNPUT   /* keep g++ happy */
