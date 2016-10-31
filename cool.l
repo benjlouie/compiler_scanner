@@ -8,12 +8,11 @@
  * to the code in the file.  Don't remove anything that was here initially
  */
 %{
-#ifdef __linux__
 #include "../src/ast.h"
+#ifdef __linux__
 #include "../bin/parser_cool.h"
 #else
-#include "ast.h"
-#include "cool.tab.h"
+#include "../compiler_parser/cool.tab.h"
 #endif
 #include <ctype.h>
 #include <vector>
