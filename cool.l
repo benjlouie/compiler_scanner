@@ -170,7 +170,6 @@ MISC			[\1-\11|\16-\37|\200-\377|\[|\]|\&|\%|\$|\#|\!|\>|\`]
 				newlinePositions.push_back(len);
 				if(!escapeError) {
                     std::string resultString = "";
-					resultString = "STR_CONST ";
 					int vectLen = newlinePositions.size();
 					for(int j = 0; j < vectLen; j+= 2) {
 						int start = newlinePositions[j];
@@ -199,8 +198,11 @@ MISC			[\1-\11|\16-\37|\200-\377|\[|\]|\&|\%|\$|\#|\!|\>|\`]
 							}
 						}
 					}
-					resultString += "\n";
-                    print(resultString.c_str());
+
+					//correctly place string into Node
+					yylval.Name = (char *)malloc((resultString.size() + 1) * sizeof(char));
+					strcpy(yylval.Name, resultString.c_str());
+                    print_long("STR_CONST", resultString.c_str());
 				}
 			}
              return STRING;
