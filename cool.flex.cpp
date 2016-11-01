@@ -1094,7 +1094,6 @@ YY_RULE_SETUP
 				newlinePositions.push_back(len);
 				if(!escapeError) {
                     std::string resultString = "";
-					resultString = "STR_CONST ";
 					int vectLen = newlinePositions.size();
 					for(int j = 0; j < vectLen; j+= 2) {
 						int start = newlinePositions[j];
@@ -1123,8 +1122,11 @@ YY_RULE_SETUP
 							}
 						}
 					}
-					resultString += "\n";
-                    print(resultString.c_str());
+
+					//correctly place string into Node
+					yylval.Name = (char *)malloc((resultString.size() + 1) * sizeof(char));
+					strcpy(yylval.Name, resultString.c_str());
+                    print_long("STR_CONST", resultString.c_str());
 				}
 			}
              return STRING;
@@ -1132,7 +1134,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 208 "cool.l"
+#line 210 "cool.l"
 {
 					print_long("INT_CONST",yytext);
 					yylval.Value = stoi(yytext); //TODO: account for ints > INT_MAX (use strtol())
@@ -1141,17 +1143,17 @@ YY_RULE_SETUP
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 213 "cool.l"
+#line 215 "cool.l"
 {print_long("BOOL_CONST",yytext); return FALSE;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 214 "cool.l"
+#line 216 "cool.l"
 {print_long("BOOL_CONST",yytext); return TRUE;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 215 "cool.l"
+#line 217 "cool.l"
 {
 				print_long("IDENTIFIER",yytext);
 				yylval.Name = (char *)malloc((strlen(yytext) + 1) * sizeof(char));
@@ -1161,92 +1163,92 @@ YY_RULE_SETUP
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 221 "cool.l"
+#line 223 "cool.l"
 {print("','"); return COMMA;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 222 "cool.l"
+#line 224 "cool.l"
 {print("'.'"); return DOT;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 223 "cool.l"
+#line 225 "cool.l"
 {print("'{'"); return LBRACE;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 224 "cool.l"
+#line 226 "cool.l"
 {print("'}'"); return RBRACE;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 225 "cool.l"
+#line 227 "cool.l"
 {print("';'"); return SEMI;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 226 "cool.l"
+#line 228 "cool.l"
 {print("':'"); return COLON;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 227 "cool.l"
+#line 229 "cool.l"
 {print("')'"); return RPAREN;}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 228 "cool.l"
+#line 230 "cool.l"
 {print("'('"); return LPAREN;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 229 "cool.l"
+#line 231 "cool.l"
 {print("'+'"); return PLUS;} 
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 230 "cool.l"
+#line 232 "cool.l"
 {print("'-'"); return MINUS;}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 231 "cool.l"
+#line 233 "cool.l"
 {print("'*'"); return TIMES;}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 232 "cool.l"
+#line 234 "cool.l"
 {print("'/'"); return DIVIDE;}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 233 "cool.l"
+#line 235 "cool.l"
 {print("LE"); return LE;}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 234 "cool.l"
+#line 236 "cool.l"
 {print("'<'"); return LT;}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 235 "cool.l"
+#line 237 "cool.l"
 {print("'='"); return EQUALS;}
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 236 "cool.l"
+#line 238 "cool.l"
 {print("'@'"); return AT;}
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 237 "cool.l"
+#line 239 "cool.l"
 {print("'~'");  return TILDE;}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 238 "cool.l"
+#line 240 "cool.l"
 {
 				if(yytext[0] < 32 || yytext[0] > 126) {
                 
@@ -1264,15 +1266,15 @@ YY_RULE_SETUP
 			}
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 253 "cool.l"
+#line 255 "cool.l"
 {return 0;} //tell driver.cpp we're done
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 254 "cool.l"
+#line 256 "cool.l"
 ECHO;
 	YY_BREAK
-#line 1276 "cool.flex.cpp"
+#line 1278 "cool.flex.cpp"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2235,7 +2237,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 253 "cool.l"
+#line 255 "cool.l"
 
 
 
