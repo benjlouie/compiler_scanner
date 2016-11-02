@@ -377,8 +377,8 @@ static void yy_fatal_error (yyconst char msg[]  );
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
 
-#define YY_NUM_RULES 48
-#define YY_END_OF_BUFFER 49
+#define YY_NUM_RULES 49
+#define YY_END_OF_BUFFER 50
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -388,24 +388,24 @@ struct yy_trans_info
 	};
 static yyconst flex_int16_t yy_accept[168] =
     {   0,
-        0,    0,   49,   47,    4,    1,    4,   48,   48,   37,
-       36,   40,   38,   30,   39,   31,   41,   26,   35,   34,
-       43,   44,   45,   21,   21,   21,   21,   21,   21,   21,
-       21,   21,   21,   21,   29,   29,   29,   29,   29,   29,
-       29,   29,   29,   29,   29,   32,   33,   46,    0,   25,
-        0,   25,    0,    0,   26,    6,   42,    5,   21,   21,
-       21,   21,   21,    9,    8,   12,   21,   21,   21,   21,
-       21,   17,   21,   21,   21,   29,   29,   29,   29,   29,
-        9,   29,    8,   12,   29,   29,   29,   29,   29,   17,
-       29,   29,   29,   29,    0,    0,    0,    2,   21,   21,
+        0,    0,   50,   48,    5,    1,    5,   49,   49,   38,
+       37,   41,   39,   31,   40,   32,   42,   27,   36,   35,
+       44,   45,   46,   22,   22,   22,   22,   22,   22,   22,
+       22,   22,   22,   22,   30,   30,   30,   30,   30,   30,
+       30,   30,   30,   30,   30,   33,   34,   47,    0,   26,
+        0,   26,    3,    0,   27,    7,   43,    6,   22,   22,
+       22,   22,   22,   10,    9,   13,   22,   22,   22,   22,
+       22,   18,   22,   22,   22,   30,   30,   30,   30,   30,
+       10,   30,    9,   13,   30,   30,   30,   30,   30,   18,
+       30,   30,   30,   30,    3,    0,    0,    2,   22,   22,
 
-       21,   21,   21,   21,   11,   21,   21,   19,   21,   21,
-       21,   29,   29,   29,   29,   29,   29,   29,   11,   29,
-       23,   19,   29,   29,   29,   29,    3,   16,   21,    7,
-       18,   21,   21,   13,   14,   10,   21,   16,   29,    7,
-       18,   29,   29,   29,   13,   14,   10,   28,   29,   20,
-       21,   21,   15,   20,   27,   29,   29,   15,   21,   21,
-       29,   24,   21,   29,   21,   22,    0
+       22,   22,   22,   22,   12,   22,   22,   20,   22,   22,
+       22,   30,   30,   30,   30,   30,   30,   30,   12,   30,
+       24,   20,   30,   30,   30,   30,    4,   17,   22,    8,
+       19,   22,   22,   14,   15,   11,   22,   17,   30,    8,
+       19,   30,   30,   30,   14,   15,   11,   29,   30,   21,
+       22,   22,   16,   21,   28,   30,   30,   16,   22,   22,
+       30,   25,   22,   30,   22,   23,    0
     } ;
 
 static yyconst flex_int32_t yy_ec[256] =
@@ -586,11 +586,11 @@ static yyconst flex_int16_t yy_chk[365] =
     } ;
 
 /* Table of booleans, true if rule could match eol. */
-static yyconst flex_int32_t yy_rule_can_match_eol[49] =
+static yyconst flex_int32_t yy_rule_can_match_eol[50] =
     {   0,
-1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 0, 0, 0, 0, 0, 0, 0, 0,     };
+1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,     };
 
 static yy_state_type yy_last_accepting_state;
 static char *yy_last_accepting_cpos;
@@ -656,10 +656,13 @@ extern YYSTYPE cool_yylval;
  *  Add Your own definitions here
  */
 
+ //number of errors
+ int numErrors = 0;
+
 /*
  * Define names for regular expressions here.
  */
-#line 663 "cool.flex.cpp"
+#line 666 "cool.flex.cpp"
 
 #define INITIAL 0
 
@@ -836,10 +839,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 112 "cool.l"
+#line 116 "cool.l"
 
 
-#line 843 "cool.flex.cpp"
+#line 846 "cool.flex.cpp"
 
 	if ( !(yy_init) )
 		{
@@ -935,109 +938,118 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 114 "cool.l"
+#line 118 "cool.l"
 {}
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 115 "cool.l"
+#line 119 "cool.l"
 {}
 	YY_BREAK
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
-#line 116 "cool.l"
-{}
+#line 120 "cool.l"
+{
+					numErrors++;
+					print("ERROR \"EOF in Multi Line Comment\"");
+				}
 	YY_BREAK
 case 4:
+/* rule 4 can match eol */
 YY_RULE_SETUP
-#line 117 "cool.l"
+#line 124 "cool.l"
 {}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 118 "cool.l"
-{print("RARROW"); return RARROW;}
+#line 125 "cool.l"
+{}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 119 "cool.l"
-{print("LARROW"); return LARROW;}
+#line 126 "cool.l"
+{print("RARROW"); return RARROW;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 120 "cool.l"
-{print("ELSE"); return ELSE;}
+#line 127 "cool.l"
+{print("LARROW"); return LARROW;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 121 "cool.l"
-{print("IF"); return IF;}
+#line 128 "cool.l"
+{print("ELSE"); return ELSE;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 122 "cool.l"
-{print("FI"); return FI;}
+#line 129 "cool.l"
+{print("IF"); return IF;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 123 "cool.l"
-{print("THEN"); return THEN;}
+#line 130 "cool.l"
+{print("FI"); return FI;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 124 "cool.l"
-{print("LET"); return LET;}
+#line 131 "cool.l"
+{print("THEN"); return THEN;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 125 "cool.l"
-{print("IN"); return IN;}
+#line 132 "cool.l"
+{print("LET"); return LET;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 126 "cool.l"
-{print("LOOP"); return LOOP;}
+#line 133 "cool.l"
+{print("IN"); return IN;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 127 "cool.l"
-{print("POOL"); return POOL;}
+#line 134 "cool.l"
+{print("LOOP"); return LOOP;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 128 "cool.l"
-{print("WHILE"); return WHILE;}
+#line 135 "cool.l"
+{print("POOL"); return POOL;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 129 "cool.l"
-{print("CASE"); return CASE;}
+#line 136 "cool.l"
+{print("WHILE"); return WHILE;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 130 "cool.l"
-{print("OF"); return OF;}
+#line 137 "cool.l"
+{print("CASE"); return CASE;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 131 "cool.l"
-{print("ESAC"); return ESAC;}
+#line 138 "cool.l"
+{print("OF"); return OF;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 132 "cool.l"
-{print("NOT"); return NOT;}
+#line 139 "cool.l"
+{print("ESAC"); return ESAC;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 133 "cool.l"
-{print("CLASS"); return CLASS;}
+#line 140 "cool.l"
+{print("NOT"); return NOT;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 134 "cool.l"
+#line 141 "cool.l"
+{print("CLASS"); return CLASS;}
+	YY_BREAK
+case 22:
+YY_RULE_SETUP
+#line 142 "cool.l"
 {
 			print_long("TYPEID",yytext);
 			yylval.Name = (char *)malloc((strlen(yytext) + 1) * sizeof(char));
@@ -1045,25 +1057,25 @@ YY_RULE_SETUP
 			return TYPE;
 			}
 	YY_BREAK
-case 22:
-YY_RULE_SETUP
-#line 140 "cool.l"
-{print("INHERITS"); return INHERITS;}
-	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 141 "cool.l"
-{print("NEW"); return NEW;}
+#line 148 "cool.l"
+{print("INHERITS"); return INHERITS;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 142 "cool.l"
-{print("ISVOID"); return ISVOID;}
+#line 149 "cool.l"
+{print("NEW"); return NEW;}
 	YY_BREAK
 case 25:
-/* rule 25 can match eol */
 YY_RULE_SETUP
-#line 143 "cool.l"
+#line 150 "cool.l"
+{print("ISVOID"); return ISVOID;}
+	YY_BREAK
+case 26:
+/* rule 26 can match eol */
+YY_RULE_SETUP
+#line 151 "cool.l"
 {
 			int len = yyleng;
 			std::vector<int> newlinePositions; //2 places at a time, (start,end) of escaped newline
@@ -1072,6 +1084,7 @@ YY_RULE_SETUP
 			
 			if(len > 1026) {
 				print("ERROR \"String constant too long\"");
+				numErrors++;
 			} else {
 				for(int i = 0; i < len; i++) {
 					if(yytext[i] == '\n') {
@@ -1082,6 +1095,7 @@ YY_RULE_SETUP
 						if(yytext[i - j] != '\\') {
 							print("ERROR \"Unterminated string constant\"");
 							escapeError = true;
+							numErrors++;
 						} else {
 							newlinePositions.push_back(i - j); //start of escape
 							newlinePositions.push_back(i); //end of escape
@@ -1089,6 +1103,7 @@ YY_RULE_SETUP
 					} else if(yytext[i] == '\0') {
 						print("ERROR \"String contains null character.\"");
 						escapeError = true;
+						numErrors++;
 					}
 				}
 				newlinePositions.push_back(len);
@@ -1132,28 +1147,28 @@ YY_RULE_SETUP
              return STRING;
 		}
 	YY_BREAK
-case 26:
+case 27:
 YY_RULE_SETUP
-#line 210 "cool.l"
+#line 221 "cool.l"
 {
 					print_long("INT_CONST",yytext);
 					yylval.Value = stoi(yytext); //TODO: account for ints > INT_MAX (use strtol())
 					return INTEGERLITERAL;
 					}
 	YY_BREAK
-case 27:
-YY_RULE_SETUP
-#line 215 "cool.l"
-{print_long("BOOL_CONST",yytext); return FALSE;}
-	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 216 "cool.l"
-{print_long("BOOL_CONST",yytext); return TRUE;}
+#line 226 "cool.l"
+{print_long("BOOL_CONST",yytext); return FALSE;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 217 "cool.l"
+#line 227 "cool.l"
+{print_long("BOOL_CONST",yytext); return TRUE;}
+	YY_BREAK
+case 30:
+YY_RULE_SETUP
+#line 228 "cool.l"
 {
 				print_long("IDENTIFIER",yytext);
 				yylval.Name = (char *)malloc((strlen(yytext) + 1) * sizeof(char));
@@ -1161,120 +1176,122 @@ YY_RULE_SETUP
 				return IDENTIFIER;
 				}
 	YY_BREAK
-case 30:
-YY_RULE_SETUP
-#line 223 "cool.l"
-{print("','"); return COMMA;}
-	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 224 "cool.l"
-{print("'.'"); return DOT;}
+#line 234 "cool.l"
+{print("','"); return COMMA;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 225 "cool.l"
-{print("'{'"); return LBRACE;}
+#line 235 "cool.l"
+{print("'.'"); return DOT;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 226 "cool.l"
-{print("'}'"); return RBRACE;}
+#line 236 "cool.l"
+{print("'{'"); return LBRACE;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 227 "cool.l"
-{print("';'"); return SEMI;}
+#line 237 "cool.l"
+{print("'}'"); return RBRACE;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 228 "cool.l"
-{print("':'"); return COLON;}
+#line 238 "cool.l"
+{print("';'"); return SEMI;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 229 "cool.l"
-{print("')'"); return RPAREN;}
+#line 239 "cool.l"
+{print("':'"); return COLON;}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 230 "cool.l"
-{print("'('"); return LPAREN;}
+#line 240 "cool.l"
+{print("')'"); return RPAREN;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 231 "cool.l"
-{print("'+'"); return PLUS;} 
+#line 241 "cool.l"
+{print("'('"); return LPAREN;}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 232 "cool.l"
-{print("'-'"); return MINUS;}
+#line 242 "cool.l"
+{print("'+'"); return PLUS;} 
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 233 "cool.l"
-{print("'*'"); return TIMES;}
+#line 243 "cool.l"
+{print("'-'"); return MINUS;}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 234 "cool.l"
-{print("'/'"); return DIVIDE;}
+#line 244 "cool.l"
+{print("'*'"); return TIMES;}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 235 "cool.l"
-{print("LE"); return LE;}
+#line 245 "cool.l"
+{print("'/'"); return DIVIDE;}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 236 "cool.l"
-{print("'<'"); return LT;}
+#line 246 "cool.l"
+{print("LE"); return LE;}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 237 "cool.l"
-{print("'='"); return EQUALS;}
+#line 247 "cool.l"
+{print("'<'"); return LT;}
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 238 "cool.l"
-{print("'@'"); return AT;}
+#line 248 "cool.l"
+{print("'='"); return EQUALS;}
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 239 "cool.l"
-{print("'~'");  return TILDE;}
+#line 249 "cool.l"
+{print("'@'"); return AT;}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 240 "cool.l"
+#line 250 "cool.l"
+{print("'~'");  return TILDE;}
+	YY_BREAK
+case 48:
+YY_RULE_SETUP
+#line 251 "cool.l"
 {
 				if(yytext[0] < 32 || yytext[0] > 126) {
                 
                     char buf[100];
                     snprintf(buf,7, "\"\\%o\"",yytext[0] & 0xFF);
 					print_long("ERROR", buf);
+					numErrors++;
 				}
 				else {
                     std::string thing = "\"";
                     thing += yytext;
                     thing += "\"";
 					print_long("ERROR",thing.c_str());
+					numErrors++;
 				}
                 //return 1; //misc errnum
 			}
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 255 "cool.l"
+#line 268 "cool.l"
 {return 0;} //tell driver.cpp we're done
 	YY_BREAK
-case 48:
+case 49:
 YY_RULE_SETUP
-#line 256 "cool.l"
+#line 269 "cool.l"
 ECHO;
 	YY_BREAK
-#line 1278 "cool.flex.cpp"
+#line 1295 "cool.flex.cpp"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2237,7 +2254,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 255 "cool.l"
+#line 268 "cool.l"
 
 
 

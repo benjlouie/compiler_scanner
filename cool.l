@@ -108,6 +108,7 @@ TRUE            true
 FALSE           false
 INLINECOMMENT	--[^\n]*[\n]
 MULTICOMMENT	"(*"([^*]|(\*+[^*)]))*\*+\)
+MULTICOMMENTERROR "(*"([^*]|(\*+[^*)]))*
 MISC			[\1-\11|\16-\37|\200-\377|\[|\]|\&|\%|\$|\#|\!|\>|\`]
 
 
@@ -116,6 +117,10 @@ MISC			[\1-\11|\16-\37|\200-\377|\[|\]|\&|\%|\$|\#|\!|\>|\`]
 
 {NEWLINE}	{}
 {INLINECOMMENT}	{}
+{MULTICOMMENTERROR} {
+					numErrors++;
+					print("ERROR \"EOF in Multi Line Comment\"");
+				}
 {MULTICOMMENT}	{}
 {WHITESPACE} {}
 {RARROW}	{print("RARROW"); return RARROW;}
