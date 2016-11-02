@@ -16,6 +16,7 @@
 #endif
 #include <ctype.h>
 #include <vector>
+#include <stdexcept>
 
 /* Max size of string constants */
 #define MAX_STR_CONST 1025
@@ -220,7 +221,12 @@ MISC			[\1-\11|\16-\37|\200-\377|\[|\]|\&|\%|\$|\#|\!|\>|\`]
 		}
 {INTEGERLITERAL}	{
 					print_long("INT_CONST",yytext);
-					yylval.Value = stoi(yytext); //TODO: account for ints > INT_MAX (use strtol())
+					try {
+						yylval.Value = stoi(yytext); //TODO: account for ints > INT_MAX (use strtol())
+					}
+					catch (const std::out_of_range& oor) {
+						yylval.Value = INT32_MAX;
+					}
 					return INTEGERLITERAL;
 					}
 {FALSE}		{print_long("BOOL_CONST",yytext); return FALSE;}
