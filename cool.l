@@ -48,6 +48,9 @@ extern YYSTYPE cool_yylval;
  *  Add Your own definitions here
  */
 
+ //number of errors
+ int numErrors = 0;
+
 %}
 
 %option nounput
@@ -105,6 +108,7 @@ TRUE            true
 FALSE           false
 INLINECOMMENT	--[^\n]*[\n]
 MULTICOMMENT	"(*"([^*]|(\*+[^*)]))*\*+\)
+MULTICOMMENTERROR "(*"([^*]|(\*+[^*)]))*
 MISC			[\1-\11|\16-\37|\200-\377|\[|\]|\&|\%|\$|\#|\!|\>|\`]
 
 
@@ -113,6 +117,10 @@ MISC			[\1-\11|\16-\37|\200-\377|\[|\]|\&|\%|\$|\#|\!|\>|\`]
 
 {NEWLINE}	{}
 {INLINECOMMENT}	{}
+{MULTICOMMENTERROR} {
+					numErrors++;
+					print("ERROR \"EOF in Multi Line Comment\"");
+				}
 {MULTICOMMENT}	{}
 {WHITESPACE} {}
 {RARROW}	{print("RARROW"); return RARROW;}
@@ -148,6 +156,7 @@ MISC			[\1-\11|\16-\37|\200-\377|\[|\]|\&|\%|\$|\#|\!|\>|\`]
 			
 			if(len > 1026) {
 				print("ERROR \"String constant too long\"");
+				numErrors++;
 			} else {
 				for(int i = 0; i < len; i++) {
 					if(yytext[i] == '\n') {
@@ -158,6 +167,7 @@ MISC			[\1-\11|\16-\37|\200-\377|\[|\]|\&|\%|\$|\#|\!|\>|\`]
 						if(yytext[i - j] != '\\') {
 							print("ERROR \"Unterminated string constant\"");
 							escapeError = true;
+							numErrors++;
 						} else {
 							newlinePositions.push_back(i - j); //start of escape
 							newlinePositions.push_back(i); //end of escape
@@ -165,6 +175,7 @@ MISC			[\1-\11|\16-\37|\200-\377|\[|\]|\&|\%|\$|\#|\!|\>|\`]
 					} else if(yytext[i] == '\0') {
 						print("ERROR \"String contains null character.\"");
 						escapeError = true;
+						numErrors++;
 					}
 				}
 				newlinePositions.push_back(len);
@@ -243,12 +254,14 @@ MISC			[\1-\11|\16-\37|\200-\377|\[|\]|\&|\%|\$|\#|\!|\>|\`]
                     char buf[100];
                     snprintf(buf,7, "\"\\%o\"",yytext[0] & 0xFF);
 					print_long("ERROR", buf);
+					numErrors++;
 				}
 				else {
                     std::string thing = "\"";
                     thing += yytext;
                     thing += "\"";
 					print_long("ERROR",thing.c_str());
+					numErrors++;
 				}
                 //return 1; //misc errnum
 			}
