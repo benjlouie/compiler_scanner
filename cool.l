@@ -140,12 +140,6 @@ MISC			[\1-\11|\16-\37|\200-\377|\[|\]|\&|\%|\$|\#|\!|\>|\`]
 {ESAC}		{print("ESAC"); return ESAC;}
 {NOT}		{print("NOT"); return NOT;}
 {CLASS}		{print("CLASS"); return CLASS;}
-{TYPE}		{
-			print_long("TYPEID",yytext);
-			yylval.Name = (char *)malloc((strlen(yytext) + 1) * sizeof(char));
-			strcpy(yylval.Name, yytext);
-			return TYPE;
-			}
 {INHERITS}	{print("INHERITS"); return INHERITS;}
 {NEW}		{print("NEW"); return NEW;}
 {ISVOID}	{print("ISVOID"); return ISVOID;}
@@ -254,6 +248,12 @@ MISC			[\1-\11|\16-\37|\200-\377|\[|\]|\&|\%|\$|\#|\!|\>|\`]
 {EQUALS}            {print("'='"); return EQUALS;}
 {AT}		    {print("'@'"); return AT;}
 {TILDE}		    {print("'~'");  return TILDE;}
+{TYPE}		{
+			print_long("TYPEID",yytext);
+			yylval.Name = (char *)malloc((strlen(yytext) + 1) * sizeof(char));
+			strcpy(yylval.Name, yytext);
+			return TYPE;
+			}
 {MISC}		{
 				if(yytext[0] < 32 || yytext[0] > 126) {
                 
