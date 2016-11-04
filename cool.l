@@ -124,32 +124,34 @@ MISC			[\1-\11|\16-\37|\200-\377|\[|\]|\&|\%|\$|\#|\!|\>|\`]
 				}
 {MULTICOMMENT}	{}
 {WHITESPACE} {}
-{RARROW}	{print("RARROW"); return RARROW;}
-{LARROW}	{print("LARROW"); return LARROW;}
-{ELSE}		{print("ELSE"); return ELSE;}
-{IF}		{print("IF"); return IF;}
-{FI}		{print("FI"); return FI;}
-{THEN}		{print("THEN"); return THEN;}
-{LET}		{print("LET"); return LET;}
-{IN}		{print("IN"); return IN;}
-{LOOP}		{print("LOOP"); return LOOP;}
-{POOL}		{print("POOL"); return POOL;}
-{WHILE}		{print("WHILE"); return WHILE;}
-{CASE}		{print("CASE"); return CASE;}
-{OF}		{print("OF"); return OF;}
-{ESAC}		{print("ESAC"); return ESAC;}
-{NOT}		{print("NOT"); return NOT;}
-{CLASS}		{print("CLASS"); return CLASS;}
+{RARROW}	{yylloc.first_line = yylineno; print("RARROW"); return RARROW;}
+{LARROW}	{yylloc.first_line = yylineno; print("LARROW"); return LARROW;}
+{ELSE}		{yylloc.first_line = yylineno; print("ELSE"); return ELSE;}
+{IF}		{yylloc.first_line = yylineno; print("IF"); return IF;}
+{FI}		{yylloc.first_line = yylineno; print("FI"); return FI;}
+{THEN}		{yylloc.first_line = yylineno; print("THEN"); return THEN;}
+{LET}		{yylloc.first_line = yylineno; print("LET"); return LET;}
+{IN}		{yylloc.first_line = yylineno; print("IN"); return IN;}
+{LOOP}		{yylloc.first_line = yylineno; print("LOOP"); return LOOP;}
+{POOL}		{yylloc.first_line = yylineno; print("POOL"); return POOL;}
+{WHILE}		{yylloc.first_line = yylineno; print("WHILE"); return WHILE;}
+{CASE}		{yylloc.first_line = yylineno; print("CASE"); return CASE;}
+{OF}		{yylloc.first_line = yylineno; print("OF"); return OF;}
+{ESAC}		{yylloc.first_line = yylineno; print("ESAC"); return ESAC;}
+{NOT}		{yylloc.first_line = yylineno; print("NOT"); return NOT;}
+{CLASS}		{yylloc.first_line = yylineno; print("CLASS"); return CLASS;}
 {TYPE}		{
+			yylloc.first_line = yylineno;
 			print_long("TYPEID",yytext);
 			yylval.Name = (char *)malloc((strlen(yytext) + 1) * sizeof(char));
 			strcpy(yylval.Name, yytext);
 			return TYPE;
 			}
-{INHERITS}	{print("INHERITS"); return INHERITS;}
-{NEW}		{print("NEW"); return NEW;}
-{ISVOID}	{print("ISVOID"); return ISVOID;}
+{INHERITS}	{yylloc.first_line = yylineno; print("INHERITS"); return INHERITS;}
+{NEW}		{yylloc.first_line = yylineno; print("NEW"); return NEW;}
+{ISVOID}	{yylloc.first_line = yylineno; print("ISVOID"); return ISVOID;}
 {STRING}	{
+			yylloc.first_line = yylineno;
 			int len = yyleng;
 			std::vector<int> newlinePositions; //2 places at a time, (start,end) of escaped newline
 			newlinePositions.push_back(0); //offset so start/end is the usable sections
@@ -220,6 +222,7 @@ MISC			[\1-\11|\16-\37|\200-\377|\[|\]|\&|\%|\$|\#|\!|\>|\`]
              return STRING;
 		}
 {INTEGERLITERAL}	{
+					yylloc.first_line = yylineno;
 					print_long("INT_CONST",yytext);
 					try {
 						yylval.Value = stoi(yytext); //TODO: account for ints > INT_MAX (use strtol())
@@ -229,32 +232,34 @@ MISC			[\1-\11|\16-\37|\200-\377|\[|\]|\&|\%|\$|\#|\!|\>|\`]
 					}
 					return INTEGERLITERAL;
 					}
-{FALSE}		{print_long("BOOL_CONST",yytext); return FALSE;}
-{TRUE}		{print_long("BOOL_CONST",yytext); return TRUE;}
+{FALSE}		{yylloc.first_line = yylineno; print_long("BOOL_CONST",yytext); return FALSE;}
+{TRUE}		{yylloc.first_line = yylineno; print_long("BOOL_CONST",yytext); return TRUE;}
 {IDENTIFIER}	{
+				yylloc.first_line = yylineno;
 				print_long("IDENTIFIER",yytext);
 				yylval.Name = (char *)malloc((strlen(yytext) + 1) * sizeof(char));
 				strcpy(yylval.Name, yytext);
 				return IDENTIFIER;
 				}
-{COMMA}		{print("','"); return COMMA;}
-{DOT}		{print("'.'"); return DOT;}
-{LBRACE}	{print("'{'"); return LBRACE;}
-{RBRACE}	{print("'}'"); return RBRACE;}
-{SEMI}  	{print("';'"); return SEMI;}
-{COLON}		    {print("':'"); return COLON;}
-{RPAREN}	{print("')'"); return RPAREN;}
-{LPAREN}	    {print("'('"); return LPAREN;}
-{PLUS}          {print("'+'"); return PLUS;} 
-{MINUS}         {print("'-'"); return MINUS;}
-{TIMES}           {print("'*'"); return TIMES;}
-{DIVIDE}           {print("'/'"); return DIVIDE;}
-{LE}           {print("LE"); return LE;}
-{LT}            {print("'<'"); return LT;}
-{EQUALS}            {print("'='"); return EQUALS;}
-{AT}		    {print("'@'"); return AT;}
-{TILDE}		    {print("'~'");  return TILDE;}
+{COMMA}		{yylloc.first_line = yylineno; print("','"); return COMMA;}
+{DOT}		{yylloc.first_line = yylineno; print("'.'"); return DOT;}
+{LBRACE}	{yylloc.first_line = yylineno; print("'{'"); return LBRACE;}
+{RBRACE}	{yylloc.first_line = yylineno; print("'}'"); return RBRACE;}
+{SEMI}  	{yylloc.first_line = yylineno; print("';'"); return SEMI;}
+{COLON}		    {yylloc.first_line = yylineno; print("':'"); return COLON;}
+{RPAREN}	{yylloc.first_line = yylineno; print("')'"); return RPAREN;}
+{LPAREN}	    {yylloc.first_line = yylineno; print("'('"); return LPAREN;}
+{PLUS}          {yylloc.first_line = yylineno; print("'+'"); return PLUS;} 
+{MINUS}         {yylloc.first_line = yylineno; print("'-'"); return MINUS;}
+{TIMES}           {yylloc.first_line = yylineno; print("'*'"); return TIMES;}
+{DIVIDE}           {yylloc.first_line = yylineno; print("'/'"); return DIVIDE;}
+{LE}           {yylloc.first_line = yylineno; print("LE"); return LE;}
+{LT}            {yylloc.first_line = yylineno; print("'<'"); return LT;}
+{EQUALS}            {yylloc.first_line = yylineno; print("'='"); return EQUALS;}
+{AT}		    {yylloc.first_line = yylineno; print("'@'"); return AT;}
+{TILDE}		    {yylloc.first_line = yylineno; print("'~'");  return TILDE;}
 {MISC}		{
+				yylloc.first_line = yylineno;
 				if(yytext[0] < 32 || yytext[0] > 126) {
                 
                     char buf[100];
