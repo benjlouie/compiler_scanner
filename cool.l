@@ -140,13 +140,6 @@ MISC			[\1-\11|\16-\37|\200-\377|\[|\]|\&|\%|\$|\#|\!|\>|\`]
 {ESAC}		{yylloc.first_line = yylineno; print("ESAC"); return ESAC;}
 {NOT}		{yylloc.first_line = yylineno; print("NOT"); return NOT;}
 {CLASS}		{yylloc.first_line = yylineno; print("CLASS"); return CLASS;}
-{TYPE}		{
-			yylloc.first_line = yylineno;
-			print_long("TYPEID",yytext);
-			yylval.Name = (char *)malloc((strlen(yytext) + 1) * sizeof(char));
-			strcpy(yylval.Name, yytext);
-			return TYPE;
-			}
 {INHERITS}	{yylloc.first_line = yylineno; print("INHERITS"); return INHERITS;}
 {NEW}		{yylloc.first_line = yylineno; print("NEW"); return NEW;}
 {ISVOID}	{yylloc.first_line = yylineno; print("ISVOID"); return ISVOID;}
@@ -258,6 +251,13 @@ MISC			[\1-\11|\16-\37|\200-\377|\[|\]|\&|\%|\$|\#|\!|\>|\`]
 {EQUALS}            {yylloc.first_line = yylineno; print("'='"); return EQUALS;}
 {AT}		    {yylloc.first_line = yylineno; print("'@'"); return AT;}
 {TILDE}		    {yylloc.first_line = yylineno; print("'~'");  return TILDE;}
+{TYPE}		{
+			yylloc.first_line = yylineno;
+			print_long("TYPEID",yytext);
+			yylval.Name = (char *)malloc((strlen(yytext) + 1) * sizeof(char));
+			strcpy(yylval.Name, yytext);
+			return TYPE;
+			}
 {MISC}		{
 				yylloc.first_line = yylineno;
 				if(yytext[0] < 32 || yytext[0] > 126) {
