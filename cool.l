@@ -105,8 +105,8 @@ NEW             [Nn][Ee][Ww]
 OF              [Oo][Ff]
 NOT             [Nn][Oo][Tt]
 CLASS           [Cc][Ll][Aa][Ss][Ss]
-TRUE            true
-FALSE           false
+TRUE            t[Rr][Uu][Ee]
+FALSE           f[Aa][Ll][Ss][Ee]
 INLINECOMMENT	--[^\n]*[\n]
 MULTICOMMENT	"(*"([^*]|(\*+[^*)]))*\*+\)
 MULTICOMMENTERROR "(*"([^*]|(\*+[^*)]))*
