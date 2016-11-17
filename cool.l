@@ -208,8 +208,9 @@ MISC			[\1-\11|\16-\37|\200-\377|\[|\]|\&|\%|\$|\#|\!|\>|\`]
 
 					//correctly place string into Node
 					yylval.Name = (char *)malloc((resultString.size() + 1) * sizeof(char));
+					resultString = resultString.substr(1, resultString.size()-2);
 					strcpy(yylval.Name, resultString.c_str());
-                    print_long("STR_CONST", resultString.c_str());
+                    print_long("STR_CONST", ("\"" + resultString + "\"").c_str());
 				}
 			}
              return STRING;
