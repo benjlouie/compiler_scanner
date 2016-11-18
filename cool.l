@@ -145,7 +145,7 @@ MISC			[\1-\11|\16-\37|\200-\377|\[|\]|\&|\%|\$|\#|\!|\>|\`]
 {ISVOID}	{yylloc.first_line = yylineno; print("ISVOID"); return ISVOID;}
 {STRING}	{
 			yylloc.first_line = yylineno;
-			int len = yyleng;
+			size_t len = yyleng;
 			std::vector<int> newlinePositions; //2 places at a time, (start,end) of escaped newline
 			newlinePositions.push_back(0); //offset so start/end is the usable sections
 			bool escapeError = false;
@@ -174,11 +174,11 @@ MISC			[\1-\11|\16-\37|\200-\377|\[|\]|\&|\%|\$|\#|\!|\>|\`]
 						numErrors++;
 					}
 				}
-				newlinePositions.push_back(len);
+				newlinePositions.push_back((int)len);
 				if(!escapeError) {
                     std::string resultString = "";
-					int vectLen = newlinePositions.size();
-					for(int j = 0; j < vectLen; j+= 2) {
+					size_t vectLen = newlinePositions.size();
+					for(size_t j = 0; j < vectLen; j+= 2) {
 						int start = newlinePositions[j];
 						int end = newlinePositions[j+1];
 						for(int i = start; i <  end; i++) {
